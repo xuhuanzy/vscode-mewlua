@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      js-yaml:
-        specifier: ^5.2.1
-        version: 5.2.1
       vscode-languageclient:
         specifier: ^10.1.0
         version: 10.1.0
@@ -22,7 +19,7 @@ importers:
         specifier: 24.x
         version: 24.13.2
       '@types/vscode':
-        specifier: ^1.125.0
+        specifier: ^1.107.0
         version: 1.125.0
       '@vscode/test-cli':
         specifier: ^0.0.15
@@ -36,6 +33,9 @@ importers:
       eslint:
         specifier: ^10.5.0
         version: 10.6.0
+      js-yaml:
+        specifier: ^5.2.1
+        version: 5.2.1
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
