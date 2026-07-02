@@ -1,0 +1,12 @@
+{
+  "extension.description": "MewLua client based on EmmyLua, providing strongly typed language support for Lua.",
+  "commands.startServer.title": "MewLua: Start Language Server",
+  "commands.stopServer.title": "MewLua: Stop Language Server",
+  "commands.restartServer.title": "MewLua: Restart Language Server",
+  "commands.openLogs.title": "MewLua: Open Language Server Logs",
+  "commands.showExtensionInfo.title": "MewLua: Show Extension Info",
+  "commands.showSyntaxTree.title": "MewLua: Show Syntax Tree",
+  "configuration.ls.executablePath.markdownDescription": "Path to the MewLua language server executable. Leave empty to use the bundled executable.",
+  "configuration.ls.startParameters.markdownDescription": "Startup arguments passed to the MewLua language server process.",
+  "configuration.ls.globalConfigPath.markdownDescription": "Optional global EmmyLua configuration path passed through `EMMYLUALS_CONFIG`."
+}

@@ -1,0 +1,12 @@
+{
+  "extension.description": "基于 EmmyLua 二次开发的 MewLua 客户端，为 Lua 提供强类型语言支持。",
+  "commands.startServer.title": "MewLua: 启动语言服务器",
+  "commands.stopServer.title": "MewLua: 停止语言服务器",
+  "commands.restartServer.title": "MewLua: 重启语言服务器",
+  "commands.openLogs.title": "MewLua: 打开语言服务器日志",
+  "commands.showExtensionInfo.title": "MewLua: 显示扩展信息",
+  "commands.showSyntaxTree.title": "MewLua: 显示语法树",
+  "configuration.ls.executablePath.markdownDescription": "MewLua 语言服务器可执行文件路径。留空时使用内置的可执行文件。",
+  "configuration.ls.startParameters.markdownDescription": "传递给 MewLua 语言服务器进程的启动参数。",
+  "configuration.ls.globalConfigPath.markdownDescription": "可选的全局 EmmyLua 配置路径，会通过 `EMMYLUALS_CONFIG` 传递。"
+}
