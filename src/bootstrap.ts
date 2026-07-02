@@ -47,29 +47,21 @@ export function createServerLaunch(
 
     // 全局配置文件通过 EmmyLua server 约定的环境变量传递给语言服务器.
     if (globalConfigPath) {
-        let globalConfigStat: fs.Stats;
+        let globalConfigStat: fs.Stats | undefined;
         try {
-            globalConfigStat = fs.statSync(globalConfigPath);
-        } catch (error) {
-            throw new Error(
-                t(
-                    'Global EmmyLua config was not found at {0}. Configure mewlua.ls.globalConfigPath to an existing file.',
-                    globalConfigPath,
-                ),
-                { cause: error },
-            );
+            globalConfigStat = fs.statSync(globalConfigPath, { throwIfNoEntry: false });
+        } catch {
+            globalConfigStat = undefined;
         }
 
-        if (!globalConfigStat.isFile()) {
-            throw new Error(
-                t(
-                    'Global EmmyLua config path must be a file, but got {0}. Configure mewlua.ls.globalConfigPath to a file path.',
-                    globalConfigPath,
-                ),
-            );
+        if (globalConfigStat?.isFile()) {
+            env['EMMYLUALS_CONFIG'] = globalConfigPath;
+        } else {
+            void vscode.window.showWarningMessage(t(
+                '`mewlua.ls.globalConfigPath` should point to an existing file: {0}',
+                globalConfigPath,
+            ));
         }
-
-        env['EMMYLUALS_CONFIG'] = globalConfigPath;
     }
 
     return {
