@@ -418,17 +418,17 @@
           "const": "global-in-non-module"
         },
         {
-          "description": "属性参数类型不匹配。",
+          "description": "特性参数类型不匹配。",
           "type": "string",
           "const": "attribute-param-type-mismatch"
         },
         {
-          "description": "属性缺少参数。",
+          "description": "特性缺少参数。",
           "type": "string",
           "const": "attribute-missing-parameter"
         },
         {
-          "description": "属性参数冗余。",
+          "description": "特性参数冗余。",
           "type": "string",
           "const": "attribute-redundant-parameter"
         },
@@ -491,7 +491,7 @@
       "type": "object",
       "properties": {
         "insertSpace": {
-          "description": "插入 `@diagnostic disable-next-line` 时, 在 `---` 注释后添加空格。\n\n省略时, 将遵循格式化器解析出的\n`emmy_doc.space_between_tag_columns` 设置。",
+          "description": "在插入`@diagnostic disable-next-line` 时, 与 `---` 之间保持空格间隔。",
           "type": [
             "boolean",
             "null"
