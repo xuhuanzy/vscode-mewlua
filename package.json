@@ -101,7 +101,7 @@
     "jsonValidation": [
       {
         "fileMatch": ".emmyrc.json",
-        "url": "./schemas/emmyrc.schema.json"
+        "url": "%jsonValidation.emmyrc.url%"
       }
     ]
   },

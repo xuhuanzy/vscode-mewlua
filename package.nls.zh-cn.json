@@ -6,6 +6,7 @@
   "commands.openLogs.title": "MewLua: 打开语言服务器日志",
   "commands.showExtensionInfo.title": "MewLua: 显示扩展信息",
   "commands.showSyntaxTree.title": "MewLua: 显示语法树",
+  "jsonValidation.emmyrc.url": "./schemas/emmyrc.schema.zh-cn.json",
   "configuration.ls.executablePath.markdownDescription": "MewLua 语言服务器可执行文件路径。留空时使用内置的可执行文件。",
   "configuration.ls.startParameters.markdownDescription": "传递给 MewLua 语言服务器进程的启动参数。",
   "configuration.ls.globalConfigPath.markdownDescription": "可选的全局 EmmyLua 配置路径，会通过 `EMMYLUALS_CONFIG` 传递。"

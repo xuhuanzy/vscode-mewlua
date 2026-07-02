@@ -6,6 +6,7 @@
   "commands.openLogs.title": "MewLua: Open Language Server Logs",
   "commands.showExtensionInfo.title": "MewLua: Show Extension Info",
   "commands.showSyntaxTree.title": "MewLua: Show Syntax Tree",
+  "jsonValidation.emmyrc.url": "./schemas/emmyrc.schema.json",
   "configuration.ls.executablePath.markdownDescription": "Path to the MewLua language server executable. Leave empty to use the bundled executable.",
   "configuration.ls.startParameters.markdownDescription": "Startup arguments passed to the MewLua language server process.",
   "configuration.ls.globalConfigPath.markdownDescription": "Optional global EmmyLua configuration path passed through `EMMYLUALS_CONFIG`."
