@@ -111,11 +111,12 @@
     "watch": "npm-run-all -p watch:*",
     "watch:esbuild": "node esbuild.js --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-    "package": "pnpm run check-types && pnpm run lint && node esbuild.js --production",
+    "package": "pnpm run i18n:schema && pnpm run check-types && pnpm run lint && node esbuild.js --production",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
     "check-types": "tsc --noEmit",
+    "i18n:schema": "tsc -p scripts/i18n/tsconfig.json && node out/scripts/i18n/schema-i18n.js",
     "lint": "eslint src",
     "test": "vscode-test"
   },
@@ -136,6 +137,7 @@
     "serialize-javascript": "^7.0.6"
   },
   "dependencies": {
+    "js-yaml": "^5.2.1",
     "vscode-languageclient": "^10.1.0"
   }
 }
