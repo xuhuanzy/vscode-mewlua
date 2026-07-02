@@ -11,7 +11,6 @@
   "Restart server": "重启服务器",
   "Start server": "启动服务器",
   "// Invalid syntax tree document.": "// 无效的语法树文档。",
-  "// MewLua language server is not running.": "// MewLua 语言服务器未运行。",
   "// The language server returned an empty syntax tree.": "// 语言服务器返回了空语法树。",
   "// The language server did not return syntax tree content.": "// 语言服务器未返回语法树内容。",
   "// Failed to request syntax tree.\n// {0}": "// 请求语法树失败。\n// {0}",

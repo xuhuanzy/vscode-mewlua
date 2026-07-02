@@ -47,6 +47,14 @@
         "icon": "$(symbol-structure)"
       }
     ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "mewlua.showSyntaxTree",
+          "when": "mewlua.serverRunning"
+        }
+      ]
+    },
     "languages": [
       {
         "id": "lua",

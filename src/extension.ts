@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 import * as commands from './commands';
 import { type CommandFactory, Ctx, detectServerWorkspace } from './ctx';
-import { SyntaxTreeManager } from './syntaxTreeProvider';
+import type { SyntaxTreeManager } from './syntaxTreeProvider';
 import { EXTENSION_NAME } from './util';
 
 const { t } = vscode.l10n;
@@ -10,10 +10,7 @@ const { t } = vscode.l10n;
 let extensionCtx: Ctx | undefined;
 
 export async function activate(context: vscode.ExtensionContext): Promise<Ctx> {
-    const syntaxTreeManager = new SyntaxTreeManager(() => extensionCtx?.client);
-    context.subscriptions.push(syntaxTreeManager);
-
-    extensionCtx = new Ctx(context, createCommands(syntaxTreeManager), detectServerWorkspace());
+    extensionCtx = new Ctx(context, createCommands(), detectServerWorkspace());
 
     try {
         await extensionCtx.start();
@@ -33,7 +30,9 @@ export async function deactivate(): Promise<void> {
     extensionCtx = undefined;
 }
 
-function createCommands(syntaxTreeManager: SyntaxTreeManager): Record<string, CommandFactory> {
+function createCommands(): Record<string, CommandFactory> {
+    let syntaxTreeManager: SyntaxTreeManager | undefined;
+
     return {
         startServer: {
             enabled: (ctx) => async () => {
@@ -47,7 +46,7 @@ function createCommands(syntaxTreeManager: SyntaxTreeManager): Record<string, Co
             enabled: (ctx) => async () => {
                 await ctx.stopAndDispose();
             },
-            disabled: (_) => async () => {},
+            disabled: (_) => async () => { },
         },
         restartServer: {
             enabled: (ctx) => async () => {
@@ -66,8 +65,24 @@ function createCommands(syntaxTreeManager: SyntaxTreeManager): Record<string, Co
             disabled: commands.showExtensionInfo,
         },
         showSyntaxTree: {
-            enabled: (_) => async (uri?: vscode.Uri) => {
-                await syntaxTreeManager.show(uri);
+            enabled: (ctx) => async (uri?: vscode.Uri) => {
+                let manager = syntaxTreeManager;
+                if (!manager) {
+                    const { SyntaxTreeManager } = await import('./syntaxTreeProvider.js');
+                    const nextManager = new SyntaxTreeManager(ctx.client);
+                    manager = nextManager;
+                    syntaxTreeManager = manager;
+                    ctx.pushClientCleanup({
+                        dispose: () => {
+                            nextManager.dispose();
+                            if (syntaxTreeManager === nextManager) {
+                                syntaxTreeManager = undefined;
+                            }
+                        },
+                    });
+                }
+
+                await manager.show(uri);
             },
         },
         showReferences: {

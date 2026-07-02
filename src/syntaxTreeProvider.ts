@@ -7,8 +7,6 @@ import { isLuaDocument } from './util';
 
 const { t } = vscode.l10n;
 
-type LanguageClientGetter = () => LanguageClient | undefined;
-
 export class SyntaxTreeProvider implements vscode.TextDocumentContentProvider, vscode.Disposable {
     static readonly SCHEME = 'emmylua-syntax-tree';
 
@@ -16,7 +14,7 @@ export class SyntaxTreeProvider implements vscode.TextDocumentContentProvider, v
 
     readonly onDidChange = this.onDidChangeEmitter.event;
 
-    constructor(private readonly getLanguageClient: LanguageClientGetter) { }
+    constructor(private readonly client: LanguageClient) { }
 
     static createUri(sourceUri: vscode.Uri): vscode.Uri {
         const fileName = path.basename(sourceUri.fsPath || sourceUri.path);
@@ -45,23 +43,15 @@ export class SyntaxTreeProvider implements vscode.TextDocumentContentProvider, v
             return t('// Invalid syntax tree document.');
         }
 
-        const client = this.getLanguageClient();
-        if (!client?.isRunning()) {
-            return t('// MewLua language server is not running.');
-        }
-
         try {
             const params: SyntaxTreeParams = {
                 uri: sourceUri.toString(),
             };
-            const result = await client.sendRequest<SyntaxTreeResponse>('emmy/syntaxTree', params, token);
+            const result = await this.client.sendRequest<SyntaxTreeResponse>('emmy/syntaxTree', params, token);
+            const content = typeof result === 'string' ? result : result?.content;
 
-            if (typeof result === 'string') {
-                return result || t('// The language server returned an empty syntax tree.');
-            }
-
-            if (result && typeof result.content === 'string') {
-                return result.content || t('// The language server returned an empty syntax tree.');
+            if (typeof content === 'string') {
+                return content || t('// The language server returned an empty syntax tree.');
             }
 
             return t('// The language server did not return syntax tree content.');
@@ -89,8 +79,8 @@ export class SyntaxTreeManager implements vscode.Disposable {
     private readonly disposables: vscode.Disposable[] = [];
     private readonly refreshTimers = new Map<string, NodeJS.Timeout>();
 
-    constructor(getLanguageClient: LanguageClientGetter) {
-        this.provider = new SyntaxTreeProvider(getLanguageClient);
+    constructor(client: LanguageClient) {
+        this.provider = new SyntaxTreeProvider(client);
         this.disposables.push(
             vscode.workspace.registerTextDocumentContentProvider(SyntaxTreeProvider.SCHEME, this.provider),
             vscode.workspace.onDidChangeTextDocument((event) => {

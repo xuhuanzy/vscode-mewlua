@@ -288,6 +288,7 @@ export class Ctx implements vscode.Disposable {
     private setServerStatus(status: ServerStatus): void {
         this.serverStatus = status;
         this.updateStatusBar();
+        void vscode.commands.executeCommand('setContext', 'mewlua.serverRunning', status.state === 'running');
         // 只有运行态才注册 enabled 命令, 其它状态统一落到 disabled 行为.
         this.updateCommands(status.state !== 'running');
     }
