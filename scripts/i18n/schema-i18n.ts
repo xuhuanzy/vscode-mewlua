@@ -115,7 +115,7 @@ class SchemaI18nSync {
         for (const [field, child] of Object.entries(value)) {
             if (field === 'description' && typeof child === 'string') {
                 const readableKey = this.buildReadableKey(currentPath, value);
-                if (readableKey) {
+                if (readableKey && this.shouldTranslateKey(readableKey)) {
                     const existingDescription = descriptions.get(readableKey);
                     if (existingDescription !== undefined && existingDescription !== child) {
                         throw new Error(`Duplicate i18n key with different English text: ${readableKey}`);
@@ -148,6 +148,11 @@ class SchemaI18nSync {
         }
 
         return readableKey;
+    }
+
+    /** 判断当前 schema 文案是否需要进入翻译中心. */
+    private shouldTranslateKey(readableKey: string): boolean {
+        return !readableKey.startsWith('EmmyrcLuaVersion.');
     }
 
     /** 读取已有翻译中心, 并校验每个条目的英文快照和目标语言字段. */
