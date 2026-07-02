@@ -3,6 +3,7 @@
   "displayName": "Mew Lua",
   "description": "%extension.description%",
   "version": "0.0.1",
+  "l10n": "./l10n",
   "engines": {
     "vscode": "^1.125.0"
   },

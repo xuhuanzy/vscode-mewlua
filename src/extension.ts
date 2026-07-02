@@ -5,6 +5,8 @@ import { type CommandFactory, Ctx, detectServerWorkspace } from './ctx';
 import { SyntaxTreeManager } from './syntaxTreeProvider';
 import { EXTENSION_NAME } from './util';
 
+const { t } = vscode.l10n;
+
 let extensionCtx: Ctx | undefined;
 
 export async function activate(context: vscode.ExtensionContext): Promise<Ctx> {
@@ -17,7 +19,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<Ctx> {
         await extensionCtx.start();
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        await vscode.window.showErrorMessage(`Cannot activate ${EXTENSION_NAME} extension: ${message}`);
+        await vscode.window.showErrorMessage(
+            t('Cannot activate {0} extension: {1}', EXTENSION_NAME, message),
+        );
         throw error;
     }
 

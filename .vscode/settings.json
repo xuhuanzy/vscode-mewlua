@@ -9,5 +9,29 @@
         "dist": true // set this to false to include "dist" folder in search results
     },
     // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-    "js/ts.tsc.autoDetect": "off"
+    "js/ts.tsc.autoDetect": "off",
+    "i18n-ally.enabledFrameworks": [
+        "vscode"
+    ],
+    "i18n-ally.localesPaths": [
+        "./l10n"
+    ],
+    "i18n-ally.pathMatcher": "bundle.l10n.?{locale?}.json",
+    "i18n-ally.sourceLanguage": "en",
+    "i18n-ally.displayLanguage": "zh-cn",
+    "i18n-ally.disablePathParsing": true,
+    "i18n-ally.regex.usageMatch": [
+        "\\bt\\(\\s*['\"`]({key})['\"`]"
+    ],
+    "i18n-ally.usage.scanningIgnore": [
+        "dist/**",
+        "out/**",
+        "scripts/**",
+        "schemas/**",
+        "server/**",
+        "syntaxes/**",
+        "src/test/**",
+        "package*.json",
+        "*.json"
+    ]
 }

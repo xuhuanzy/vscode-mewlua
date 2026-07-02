@@ -9,6 +9,8 @@ import * as lc from 'vscode-languageclient/node';
 
 import { ConfigurationManager } from './config';
 
+const { t } = vscode.l10n;
+
 export type ServerInfo =
     | {
         readonly mode: 'debug';
@@ -50,16 +52,20 @@ export function createServerLaunch(
             globalConfigStat = fs.statSync(globalConfigPath);
         } catch (error) {
             throw new Error(
-                `Global EmmyLua config was not found at ${globalConfigPath}. ` +
-                'Configure mewlua.ls.globalConfigPath to an existing file.',
+                t(
+                    'Global EmmyLua config was not found at {0}. Configure mewlua.ls.globalConfigPath to an existing file.',
+                    globalConfigPath,
+                ),
                 { cause: error },
             );
         }
 
         if (!globalConfigStat.isFile()) {
             throw new Error(
-                `Global EmmyLua config path must be a file, but got ${globalConfigPath}. ` +
-                'Configure mewlua.ls.globalConfigPath to a file path.',
+                t(
+                    'Global EmmyLua config path must be a file, but got {0}. Configure mewlua.ls.globalConfigPath to a file path.',
+                    globalConfigPath,
+                ),
             );
         }
 
@@ -98,25 +104,12 @@ export function resolveServerInfo(
     try {
         executableStat = fs.statSync(executablePath);
     } catch (error) {
-        if (configuredPath) {
-            throw new Error(
-                `Configured language server executable was not found at ${executablePath}. ` +
-                'Configure mewlua.ls.executablePath to an existing file.',
-                { cause: error },
-            );
-        }
-
-        throw new Error(
-            `Language server executable was not found at ${executablePath}. ` +
-            'Configure mewlua.ls.executablePath or place the bundled server under the extension server directory.',
-            { cause: error },
-        );
+        throw new Error(t('Language server executable not found: {0}', executablePath), { cause: error });
     }
 
     if (!executableStat.isFile()) {
         throw new Error(
-            `Language server executable path must be a file, but got ${executablePath}. ` +
-            'Configure mewlua.ls.executablePath to a file path.',
+            t('Language server executable path is not a file: {0}', executablePath),
         );
     }
 
@@ -124,7 +117,7 @@ export function resolveServerInfo(
         try {
             fs.chmodSync(executablePath, 0o755);
         } catch (error) {
-            outputChannel?.appendLine(`Failed to chmod language server: ${String(error)}`);
+            outputChannel?.appendLine(t('Failed to chmod language server: {0}', String(error)));
         }
     }
 
@@ -158,10 +151,10 @@ function createDebugServerOptions(
             });
 
             socket.on('close', () => {
-                outputChannel.appendLine(`Language server socket closed on port ${port}.`);
+                outputChannel.appendLine(t('Language server socket closed on port {0}.', port));
             });
             socket.on('error', (error) => {
-                outputChannel.appendLine(`Language server socket error: ${error.message}`);
+                outputChannel.appendLine(t('Language server socket error: {0}', error.message));
                 reject(error);
             });
         });

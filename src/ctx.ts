@@ -12,6 +12,8 @@ import {
     isLuaDocument,
 } from './util';
 
+const { t } = vscode.l10n;
+
 export type Workspace =
     | { kind: 'Empty' }
     | { kind: 'Workspace Folder' }
@@ -151,7 +153,7 @@ export class Ctx implements vscode.Disposable {
         if (this._workspace.kind === 'Empty') {
             this.setServerStatus({
                 state: 'stopped',
-                message: 'No file-backed Lua workspace or document is open.',
+                message: t('No file-backed Lua workspace or document is open.'),
             });
             return;
         }
@@ -168,7 +170,7 @@ export class Ctx implements vscode.Disposable {
             const message = error instanceof Error ? error.message : String(error);
             this.setServerStatus({
                 state: 'error',
-                message: `Failed to start ${EXTENSION_NAME} language server.`,
+                message: t('Failed to start {0} language server.', EXTENSION_NAME),
                 details: message,
             });
             throw error;
@@ -177,7 +179,7 @@ export class Ctx implements vscode.Disposable {
 
     /** 重启语言服务器并重新应用当前配置. */
     async restart(): Promise<void> {
-        await this.stopAndDispose(`Restarting ${EXTENSION_NAME} language server...`);
+        await this.stopAndDispose(t('Restarting {0} language server...', EXTENSION_NAME));
         await this.start();
     }
 
@@ -227,7 +229,9 @@ export class Ctx implements vscode.Disposable {
 
         // 没有可分析的 Lua 环境时立即停服, 避免后台服务器继续占用资源.
         if (nextWorkspace.kind === 'Empty') {
-            await this.stopAndDispose(`Stopping ${EXTENSION_NAME} language server because no Lua workspace is open.`);
+            await this.stopAndDispose(
+                t('Stopping {0} language server because no Lua workspace is open.', EXTENSION_NAME),
+            );
             return;
         }
 
@@ -307,7 +311,7 @@ export class Ctx implements vscode.Disposable {
             } else {
                 callback = () => {
                     void vscode.window.showWarningMessage(
-                        `command ${fullName} failed: MewLua server is not running`,
+                        t('Command {0} failed: {1} server is not running.', fullName, EXTENSION_NAME),
                     );
                 };
             }
@@ -321,7 +325,9 @@ export class Ctx implements vscode.Disposable {
         const status = this.serverStatus;
         const tooltip = new vscode.MarkdownString('', true);
         tooltip.isTrusted = true;
-        tooltip.appendMarkdown(`[Extension Info](command:${commandName('showExtensionInfo')})`);
+        tooltip.appendMarkdown(
+            `[${t('Extension Info')}](command:${commandName('showExtensionInfo')})`,
+        );
         tooltip.appendText(`: Version ${this.version}, Server Version ${this._serverInfo?.version || '<not running>'}`);
         tooltip.appendMarkdown('\n\n');
 
@@ -335,14 +341,18 @@ export class Ctx implements vscode.Disposable {
             tooltip.appendMarkdown('\n```\n\n');
         }
 
-        tooltip.appendMarkdown(`[$(terminal) Open logs](command:${commandName('openLogs')})\n\n`);
+        tooltip.appendMarkdown(`[$(terminal) ${t('Open logs')}](command:${commandName('openLogs')})\n\n`);
 
         if (status.state === 'running') {
             // 运行态提供 stop/restart 快捷入口, 稳定的非运行态提供 start 入口.
-            tooltip.appendMarkdown(`[$(stop-circle) Stop server](command:${commandName('stopServer')})\n\n`);
-            tooltip.appendMarkdown(`[$(debug-restart) Restart server](command:${commandName('restartServer')})`);
+            tooltip.appendMarkdown(
+                `[$(stop-circle) ${t('Stop server')}](command:${commandName('stopServer')})\n\n`,
+            );
+            tooltip.appendMarkdown(
+                `[$(debug-restart) ${t('Restart server')}](command:${commandName('restartServer')})`,
+            );
         } else if (status.state !== 'starting' && status.state !== 'stopping') {
-            tooltip.appendMarkdown(`[$(play) Start server](command:${commandName('startServer')})`);
+            tooltip.appendMarkdown(`[$(play) ${t('Start server')}](command:${commandName('startServer')})`);
         }
 
         const configByState: Record<ServerState, { icon: string; severity: vscode.LanguageStatusSeverity; color?: vscode.ThemeColor; backgroundColor?: vscode.ThemeColor }> = {

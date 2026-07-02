@@ -5,6 +5,8 @@ import type { LanguageClient } from 'vscode-languageclient/node';
 import { type SyntaxTreeParams, type SyntaxTreeResponse } from './lspExtension';
 import { isLuaDocument } from './util';
 
+const { t } = vscode.l10n;
+
 type LanguageClientGetter = () => LanguageClient | undefined;
 
 export class SyntaxTreeProvider implements vscode.TextDocumentContentProvider, vscode.Disposable {
@@ -40,12 +42,12 @@ export class SyntaxTreeProvider implements vscode.TextDocumentContentProvider, v
     async provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): Promise<string> {
         const sourceUri = SyntaxTreeProvider.parseSourceUri(uri);
         if (!sourceUri) {
-            return '// Invalid syntax tree document.';
+            return t('// Invalid syntax tree document.');
         }
 
         const client = this.getLanguageClient();
         if (!client?.isRunning()) {
-            return '// MewLua language server is not running.';
+            return t('// MewLua language server is not running.');
         }
 
         try {
@@ -55,21 +57,21 @@ export class SyntaxTreeProvider implements vscode.TextDocumentContentProvider, v
             const result = await client.sendRequest<SyntaxTreeResponse>('emmy/syntaxTree', params, token);
 
             if (typeof result === 'string') {
-                return result || '// The language server returned an empty syntax tree.';
+                return result || t('// The language server returned an empty syntax tree.');
             }
 
             if (result && typeof result.content === 'string') {
-                return result.content || '// The language server returned an empty syntax tree.';
+                return result.content || t('// The language server returned an empty syntax tree.');
             }
 
-            return '// The language server did not return syntax tree content.';
+            return t('// The language server did not return syntax tree content.');
         } catch (error) {
             if (token.isCancellationRequested) {
                 return '';
             }
 
             const message = error instanceof Error ? error.message : String(error);
-            return `// Failed to request syntax tree.\n// ${message}`;
+            return t('// Failed to request syntax tree.\n// {0}', message);
         }
     }
 
@@ -116,12 +118,10 @@ export class SyntaxTreeManager implements vscode.Disposable {
             ?? (activeDocument ? SyntaxTreeProvider.parseSourceUri(activeDocument.uri) ?? activeDocument.uri : undefined);
 
         if (!targetUri) {
-            void vscode.window.showWarningMessage('Open a Lua file before showing the syntax tree.');
             return;
         }
 
         if (targetUri.scheme !== 'file') {
-            void vscode.window.showWarningMessage('Syntax tree view only supports file-backed Lua documents.');
             return;
         }
 
@@ -129,7 +129,6 @@ export class SyntaxTreeManager implements vscode.Disposable {
             (document) => document.uri.toString() === targetUri.toString(),
         );
         if (targetDocument && !isLuaDocument(targetDocument)) {
-            void vscode.window.showWarningMessage('Syntax tree view only supports Lua documents.');
             return;
         }
 
@@ -145,7 +144,7 @@ export class SyntaxTreeManager implements vscode.Disposable {
             this.provider.refresh(targetUri);
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
-            void vscode.window.showErrorMessage(`Cannot show syntax tree: ${message}`);
+            void vscode.window.showErrorMessage(t('Cannot show syntax tree: {0}', message));
         }
     }
 

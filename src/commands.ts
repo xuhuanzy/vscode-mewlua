@@ -2,36 +2,32 @@ import * as vscode from 'vscode';
 import * as lc from "vscode-languageclient";
 
 import type { Cmd, Ctx, CtxInit } from './ctx';
-import { EXTENSION_NAME } from './util';
 import type { LanguageClient } from "vscode-languageclient/node";
-
 
 export function openLogs(ctx: Ctx): Cmd {
     return () => {
         if (ctx.outputChannel) {
             ctx.outputChannel.show();
-            return;
         }
-
-        void vscode.window.showInformationMessage(`${EXTENSION_NAME} output channel has not been initialized yet.`);
     };
 }
 
 export function showExtensionInfo(ctx: Ctx): Cmd {
     return () => {
+        let serverInfo;
         try {
-            const serverInfo = ctx.serverInfo ?? ctx.getServerInfo();
-            void vscode.window.showInformationMessage(
-                [
-                    `Extension Version: ${ctx.version}`,
-                    `Server Version: ${serverInfo.version || '<unknown>'}`,
-                    `Server Path: ${serverInfo.path}`,
-                ].join('; '),
-            );
-        } catch (error) {
-            const message = error instanceof Error ? error.message : String(error);
-            void vscode.window.showErrorMessage(`Cannot resolve ${EXTENSION_NAME} extension info: ${message}`);
+            serverInfo = ctx.serverInfo ?? ctx.getServerInfo();
+        } catch {
+            return;
         }
+
+        void vscode.window.showInformationMessage(
+            [
+                `Extension Version: ${ctx.version}`,
+                `Server Version: ${serverInfo.version || '<unknown>'}`,
+                `Server Path: ${serverInfo.path}`,
+            ].join('; '),
+        );
     };
 }
 
