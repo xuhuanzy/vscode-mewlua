@@ -61,7 +61,7 @@ export class SyntaxTreeProvider implements vscode.TextDocumentContentProvider, v
             }
 
             const message = error instanceof Error ? error.message : String(error);
-            return t('// Failed to request syntax tree.\n// {0}', message);
+            return `${t('// Failed to request syntax tree.')}\n// ${message}`;
         }
     }
 

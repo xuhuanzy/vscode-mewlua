@@ -13,7 +13,7 @@
   "// Invalid syntax tree document.": "// Invalid syntax tree document.",
   "// The language server returned an empty syntax tree.": "// The language server returned an empty syntax tree.",
   "// The language server did not return syntax tree content.": "// The language server did not return syntax tree content.",
-  "// Failed to request syntax tree.\n// {0}": "// Failed to request syntax tree.\n// {0}",
+  "// Failed to request syntax tree.": "// Failed to request syntax tree.",
   "Cannot show syntax tree: {0}": "Cannot show syntax tree: {0}",
   "`mewlua.ls.globalConfigPath` should point to an existing file: {0}": "`mewlua.ls.globalConfigPath` should point to an existing file: {0}",
   "Language server executable not found: {0}": "Language server executable not found: {0}",

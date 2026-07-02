@@ -21,7 +21,7 @@
     "i18n-ally.displayLanguage": "zh-cn",
     "i18n-ally.disablePathParsing": true,
     "i18n-ally.regex.usageMatch": [
-        "\\bt\\(\\s*['\"`]({key})['\"`]"
+        "\\bt\\(\\s*'({key})'"
     ],
     "i18n-ally.usage.scanningIgnore": [
         "dist/**",
