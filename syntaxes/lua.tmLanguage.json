@@ -41,6 +41,16 @@
 			]
 		},
 		{
+			"begin": "(?<=\\(alias\\))[ \\t]+(?=[a-zA-Z_])",
+			"end": "$",
+			"name": "meta.type.alias.lua",
+			"patterns": [
+				{
+					"include": "#hover.alias"
+				}
+			]
+		},
+		{
 			"match": "(?<![\\w.])0[xX](?:[0-9A-Fa-f]+\\.[0-9A-Fa-f]*|[0-9A-Fa-f]*\\.[0-9A-Fa-f]+)(?:[pP][+-]?\\d+)?(?![\\w.])",
 			"name": "constant.numeric.float.hexadecimal.lua"
 		},
@@ -256,6 +266,35 @@
 			},
 			"end": "(?=,|\\})",
 			"name": "meta.field.declaration.lua",
+			"patterns": [
+				{
+					"include": "#emmydoc.type"
+				}
+			]
+		},
+		"hover.alias": {
+			"patterns": [
+				{
+					"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b",
+					"name": "entity.name.type.alias.lua"
+				},
+				{
+					"include": "#type.arguments"
+				},
+				{
+					"include": "#hover.alias.value"
+				}
+			]
+		},
+		"hover.alias.value": {
+			"begin": "=",
+			"beginCaptures": {
+				"0": {
+					"name": "keyword.operator.assignment.lua"
+				}
+			},
+			"end": "$",
+			"name": "meta.type.annotation.lua",
 			"patterns": [
 				{
 					"include": "#emmydoc.type"
@@ -663,7 +702,7 @@
 							"begin": "\\b([a-zA-Z_\\*][a-zA-Z0-9_\\.\\*\\-]*)",
 							"beginCaptures": {
 								"0": {
-									"name": "variable.lua"
+									"name": "entity.name.type.alias.lua"
 								}
 							},
 							"end": "(?=[\\n#])",
@@ -1050,6 +1089,14 @@
 				{
 					"match": "\\basync\\b",
 					"name": "entity.name.tag.lua"
+				},
+				{
+					"match": "\\bextends\\b",
+					"name": "storage.modifier.lua"
+				},
+				{
+					"match": "\\b(and|or)\\b",
+					"name": "keyword.operator.ternary.lua"
 				},
 				{
 					"match": "[\\{\\}\\:\\,\\?\\|\\`][ \\t]*",
