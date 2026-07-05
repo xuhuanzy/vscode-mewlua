@@ -497,9 +497,6 @@
 							"patterns": [
 								{
 									"include": "#emmydoc.tag"
-								},
-								{
-									"include": "#ldoc_tag"
 								}
 							]
 						},
@@ -525,9 +522,6 @@
 							"patterns": [
 								{
 									"include": "#emmydoc.tag"
-								},
-								{
-									"include": "#ldoc_tag"
 								}
 							]
 						},
@@ -539,12 +533,7 @@
 								}
 							},
 							"end": "\\n",
-							"name": "comment.line.double-dash.lua",
-							"patterns": [
-								{
-									"include": "#ldoc_tag"
-								}
-							]
+							"name": "comment.line.double-dash.lua"
 						}
 					]
 				},
@@ -565,9 +554,6 @@
 					"patterns": [
 						{
 							"include": "#emmydoc.tag"
-						},
-						{
-							"include": "#ldoc_tag"
 						}
 					]
 				}
@@ -1056,17 +1042,6 @@
 					]
 				}
 			]
-		},
-		"ldoc_tag": {
-			"match": "\\G[ \\t]*(@)(alias|annotation|author|charset|class|classmod|comment|constructor|copyright|description|example|export|factory|field|file|fixme|function|include|lfunction|license|local|module|name|param|pragma|private|raise|release|return|script|section|see|set|static|submodule|summary|tfield|thread|tparam|treturn|todo|topic|type|usage|warning|within)\\b",
-			"captures": {
-				"1": {
-					"name": "punctuation.definition.block.tag.ldoc"
-				},
-				"2": {
-					"name": "storage.type.class.ldoc"
-				}
-			}
 		}
 	}
 }
