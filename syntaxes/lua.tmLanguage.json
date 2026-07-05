@@ -399,7 +399,7 @@
 							"name": "punctuation.definition.string.end.lua"
 						}
 					},
-					"name": "string.quoted.double.lua"
+					"name": "string.quoted.other.lua"
 				},
 				{
 					"begin": "(?<=\\.cdef)\\s*(\\[(=*)\\[)",
@@ -411,7 +411,7 @@
 							"name": "punctuation.definition.string.begin.lua"
 						}
 					},
-					"contentName": "meta.embedded.lua",
+					"contentName": "meta.embedded.c.lua",
 					"end": "(\\]\\2\\])",
 					"endCaptures": {
 						"0": {
