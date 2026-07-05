@@ -496,7 +496,7 @@
 							"name": "comment.block.lua",
 							"patterns": [
 								{
-									"include": "#emmydoc"
+									"include": "#emmydoc.tag"
 								},
 								{
 									"include": "#ldoc_tag"
@@ -524,7 +524,7 @@
 							"name": "comment.line.double-dash.documentation.lua",
 							"patterns": [
 								{
-									"include": "#emmydoc"
+									"include": "#emmydoc.tag"
 								},
 								{
 									"include": "#ldoc_tag"
@@ -564,7 +564,7 @@
 					"name": "comment.block.lua",
 					"patterns": [
 						{
-							"include": "#emmydoc"
+							"include": "#emmydoc.tag"
 						},
 						{
 							"include": "#ldoc_tag"
@@ -573,7 +573,7 @@
 				}
 			]
 		},
-		"emmydoc": {
+		"emmydoc.tag": {
 			"patterns": [
 				{
 					"begin": "(?<=---)[ \\t]*@class",
