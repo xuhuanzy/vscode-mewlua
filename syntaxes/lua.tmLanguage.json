@@ -913,7 +913,7 @@
 							"begin": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b(\\??)",
 							"beginCaptures": {
 								"1": {
-									"name": "entity.name.variable.lua"
+									"name": "variable.parameter.lua"
 								},
 								"2": {
 									"name": "keyword.operator.lua"
@@ -959,7 +959,7 @@
 							"begin": "(\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b|(\\[))(\\??)",
 							"beginCaptures": {
 								"2": {
-									"name": "entity.name.variable.lua"
+									"name": "variable.parameter.lua"
 								},
 								"3": {
 									"name": "keyword.operator.lua"
@@ -1224,7 +1224,7 @@
 						},
 						{
 							"match": "([a-zA-Z_][a-zA-Z0-9_\\.\\*\\-]*)(?<!,)[ \\t]*(?=\\??:)",
-							"name": "entity.name.variable.lua"
+							"name": "variable.other.lua"
 						},
 						{
 							"include": "#emmydoc.type"
