@@ -31,6 +31,16 @@
 			]
 		},
 		{
+			"begin": "(?<=\\(class\\))[ \\t]+(?=[a-zA-Z_])",
+			"end": "(?<=\\})",
+			"name": "meta.class.lua",
+			"patterns": [
+				{
+					"include": "#class.declaration"
+				}
+			]
+		},
+		{
 			"match": "(?<![\\w.])0[xX](?:[0-9A-Fa-f]+\\.[0-9A-Fa-f]*|[0-9A-Fa-f]*\\.[0-9A-Fa-f]+)(?:[pP][+-]?\\d+)?(?![\\w.])",
 			"name": "constant.numeric.float.hexadecimal.lua"
 		},
@@ -182,6 +192,62 @@
 		}
 	],
 	"repository": {
+		"class.declaration": {
+			"patterns": [
+				{
+					"match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b",
+					"name": "entity.name.type.class.lua"
+				},
+				{
+					"include": "#class.body"
+				}
+			]
+		},
+		"class.body": {
+			"begin": "\\{",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.section.block.begin.lua"
+				}
+			},
+			"end": "\\}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.section.block.end.lua"
+				}
+			},
+			"name": "meta.class.body.lua",
+			"patterns": [
+				{
+					"include": "#comment"
+				},
+				{
+					"include": "#class.field"
+				},
+				{
+					"match": ",",
+					"name": "keyword.operator.lua"
+				}
+			]
+		},
+		"class.field": {
+			"begin": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b\\s*(:)",
+			"beginCaptures": {
+				"1": {
+					"name": "variable.object.property.lua"
+				},
+				"2": {
+					"name": "keyword.operator.lua"
+				}
+			},
+			"end": "(?=,|\\})",
+			"name": "meta.field.declaration.lua",
+			"patterns": [
+				{
+					"include": "#emmydoc.type"
+				}
+			]
+		},
 		"function.signature": {
 			"patterns": [
 				{
