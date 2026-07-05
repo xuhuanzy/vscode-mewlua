@@ -362,7 +362,7 @@ export class Ctx implements vscode.Disposable {
                 severity: vscode.LanguageStatusSeverity.Information,
             },
             running: {
-                icon: '$(check) ',
+                icon: '',
                 severity: vscode.LanguageStatusSeverity.Information,
             },
             stopping: {
