@@ -138,7 +138,7 @@
     "test": "pnpm run check",
     "check": "tsc --noEmit && eslint src",
     "i18n": "tsc -p scripts/tsconfig.json && node out/scripts/i18n/schema-i18n.js",
-    "release": "tsc -p scripts/tsconfig.json && node out/scripts/release/index.js"
+    "build": "tsc -p scripts/tsconfig.json && node out/scripts/build/index.js"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",

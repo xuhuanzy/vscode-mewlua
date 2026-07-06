@@ -10,7 +10,7 @@ interface EmmyrcSchemaConfig {
 }
 
 export async function syncEmmyrcSchema(projectRoot = process.cwd()): Promise<void> {
-    const configPath = path.join(projectRoot, 'scripts', 'release', 'release.json');
+    const configPath = path.join(projectRoot, 'scripts', 'build', 'build.json');
     let rawConfig: unknown;
     try {
         rawConfig = JSON.parse(fs.readFileSync(configPath, 'utf8')) as unknown;

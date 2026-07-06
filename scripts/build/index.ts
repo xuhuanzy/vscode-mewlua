@@ -2,7 +2,7 @@ import { syncEmmyrcSchema } from './sync-emmyrc-schema';
 
 async function main(): Promise<void> {
     const projectRoot = process.cwd();
-    const releaseTasks: Record<string, () => Promise<void>> = {
+    const buildTasks: Record<string, () => Promise<void>> = {
         'sync-emmyrc-schema': () => syncEmmyrcSchema(projectRoot),
     };
 
@@ -11,23 +11,23 @@ async function main(): Promise<void> {
         .map((arg) => arg.startsWith('--') ? arg.slice(2) : arg)
         .filter((arg) => arg.length > 0);
     if (args.includes('help') || args.includes('-h')) {
-        console.log(`用法: pnpm run release -- [all|${Object.keys(releaseTasks).join('|')}]\n默认: all`);
+        console.log(`用法: pnpm run build -- [all|${Object.keys(buildTasks).join('|')}]\n默认: all`);
         return;
     }
 
-    const taskNames = args.length === 0 || args.includes('all') ? Object.keys(releaseTasks) : args;
+    const taskNames = args.length === 0 || args.includes('all') ? Object.keys(buildTasks) : args;
     for (const taskName of taskNames) {
-        const task = releaseTasks[taskName];
+        const task = buildTasks[taskName];
         if (!task) {
-            throw new Error(`未知发布任务: ${taskName}. 可用任务: all, ${Object.keys(releaseTasks).join(', ')}.`);
+            throw new Error(`未知构建任务: ${taskName}. 可用任务: all, ${Object.keys(buildTasks).join(', ')}.`);
         }
         await task();
     }
 
-    console.log('发布脚本执行完成.');
+    console.log('构建脚本执行完成.');
 }
 
 main().catch((error: unknown) => {
-    console.error(`发布失败: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`构建失败: ${error instanceof Error ? error.message : String(error)}`);
     process.exit(1);
 });
