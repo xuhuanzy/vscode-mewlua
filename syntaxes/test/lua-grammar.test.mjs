@@ -122,6 +122,20 @@ test('numeric literal types keep numeric scopes', async () => {
 	assert.ok(value.scopes.includes('constant.numeric.integer.lua'));
 });
 
+test('class indexer declarations reuse type scopes', async () => {
+	const lines = await tokenizeLua(`(class) B {
+    [integer]: string,
+}`);
+
+	const keyType = findToken(lines, 2, 'integer');
+	assert.ok(keyType.scopes.includes('meta.class.body.lua'));
+	assert.ok(keyType.scopes.includes('support.type.primitive.lua'));
+
+	const valueType = findToken(lines, 2, 'string');
+	assert.ok(valueType.scopes.includes('meta.class.body.lua'));
+	assert.ok(valueType.scopes.includes('support.type.primitive.lua'));
+});
+
 test('grouped emmydoc tags keep annotation and type scopes', async () => {
 	const lines = await tokenizeLua(`---@type number
 ---@overload fun(): string

@@ -249,6 +249,9 @@
 				{
 					"match": ",",
 					"name": "keyword.operator.lua"
+				},
+				{
+					"include": "#emmydoc.type"
 				}
 			]
 		},
@@ -1249,7 +1252,7 @@
 					"end": "(?=[\\s\\)\\[\\]\\,\\?\\:\\}\\|#<>])",
 					"patterns": [
 						{
-							"match": "\\b(true|false|nil|boolean|number|integer|userdata|lightuserdata|thread|table|any|void|unknown|never|self|int|function)\\b",
+							"match": "\\b(true|false|nil|boolean|string|number|integer|userdata|lightuserdata|thread|table|any|void|unknown|never|self|int|function)\\b",
 							"name": "support.type.primitive.lua"
 						},
 						{
