@@ -90,3 +90,40 @@ test('function return names after a nested fun parameter are parsed as return va
 	assert.ok(findToken(lines, 2, 'number').scopes.includes('support.type.primitive.lua'));
 	assert.ok(findToken(lines, 3, 'number').scopes.includes('support.type.primitive.lua'));
 });
+
+test('numeric literal patterns keep their scopes after grouping', async () => {
+	const lines = await tokenizeLua('local values = { 0x1.8p1, 0x10p-2, 0xff, 1., 1e2, .5, 42 }');
+
+	assert.ok(findToken(lines, 1, '0x1.8p1').scopes.includes('constant.numeric.float.hexadecimal.lua'));
+	assert.ok(findToken(lines, 1, '0x10p-2').scopes.includes('constant.numeric.float.hexadecimal.lua'));
+	assert.ok(findToken(lines, 1, '0xff').scopes.includes('constant.numeric.integer.hexadecimal.lua'));
+	assert.ok(findToken(lines, 1, '1.').scopes.includes('constant.numeric.float.lua'));
+	assert.ok(findToken(lines, 1, '1e2').scopes.includes('constant.numeric.float.lua'));
+	assert.ok(findToken(lines, 1, '.5').scopes.includes('constant.numeric.float.lua'));
+	assert.ok(findToken(lines, 1, '42').scopes.includes('constant.numeric.integer.lua'));
+});
+
+test('grouped emmydoc tags keep annotation and type scopes', async () => {
+	const lines = await tokenizeLua(`---@type number
+---@overload fun(): string
+---@deprecated use replacement
+---@private`);
+
+	assert.ok(findToken(lines, 1, '@type').scopes.includes('storage.type.annotation.lua'));
+	assert.ok(findToken(lines, 1, 'number').scopes.includes('support.type.primitive.lua'));
+	assert.ok(findToken(lines, 2, '@overload').scopes.includes('storage.type.annotation.lua'));
+	assert.ok(findToken(lines, 2, 'fun').scopes.includes('keyword.control.lua'));
+	assert.ok(findToken(lines, 3, '@deprecated').scopes.includes('storage.type.annotation.lua'));
+	assert.ok(findToken(lines, 4, '@private').scopes.includes('storage.type.annotation.lua'));
+});
+
+test('inlined type helper patterns keep their scopes', async () => {
+	const lines = await tokenizeLua(`---@class Box<T extends string = number>
+---@type value extends infer T`);
+
+	assert.ok(findToken(lines, 1, 'extends').scopes.includes('storage.modifier.lua'));
+	assert.ok(findToken(lines, 1, '=').scopes.includes('keyword.operator.assignment.lua'));
+	assert.ok(findToken(lines, 1, 'number').scopes.includes('support.type.primitive.lua'));
+	assert.ok(findToken(lines, 2, 'infer').scopes.includes('keyword.operator.expression.infer.lua'));
+	assert.ok(findToken(lines, 2, 'T').scopes.includes('entity.name.type.lua'));
+});

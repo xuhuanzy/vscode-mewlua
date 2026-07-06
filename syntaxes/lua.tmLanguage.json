@@ -54,11 +54,7 @@
 			]
 		},
 		{
-			"match": "(?<![\\w.])0[xX](?:[0-9A-Fa-f]+\\.[0-9A-Fa-f]*|[0-9A-Fa-f]*\\.[0-9A-Fa-f]+)(?:[pP][+-]?\\d+)?(?![\\w.])",
-			"name": "constant.numeric.float.hexadecimal.lua"
-		},
-		{
-			"match": "(?<![\\w.])0[xX][0-9A-Fa-f]+[pP][+-]?\\d+(?![\\w.])",
+			"match": "(?<![\\w.])0[xX](?:(?:[0-9A-Fa-f]+\\.[0-9A-Fa-f]*|[0-9A-Fa-f]*\\.[0-9A-Fa-f]+)(?:[pP][+-]?\\d+)?|[0-9A-Fa-f]+[pP][+-]?\\d+)(?![\\w.])",
 			"name": "constant.numeric.float.hexadecimal.lua"
 		},
 		{
@@ -66,15 +62,7 @@
 			"name": "constant.numeric.integer.hexadecimal.lua"
 		},
 		{
-			"match": "(?<![\\w.])\\d+\\.\\d*(?:[eE][+-]?\\d+)?(?![\\w.])",
-			"name": "constant.numeric.float.lua"
-		},
-		{
-			"match": "(?<![\\w.])\\d+[eE][+-]?\\d+(?![\\w.])",
-			"name": "constant.numeric.float.lua"
-		},
-		{
-			"match": "(?<![\\w.])\\.\\d+(?:[eE][+-]?\\d+)?(?![\\w.])",
+			"match": "(?<![\\w.])(?:(?:\\d+\\.\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?|\\d+[eE][+-]?\\d+)(?![\\w.])",
 			"name": "constant.numeric.float.lua"
 		},
 		{
@@ -389,7 +377,19 @@
 		"type.operators": {
 			"patterns": [
 				{
-					"include": "#type.infer"
+					"match": "\\b(infer)\\s+([a-zA-Z_][a-zA-Z0-9_]*)(?:\\s+(extends)\\b)?",
+					"name": "meta.type.infer.lua",
+					"captures": {
+						"1": {
+							"name": "keyword.operator.expression.infer.lua"
+						},
+						"2": {
+							"name": "entity.name.type.lua"
+						},
+						"3": {
+							"name": "keyword.operator.expression.extends.lua"
+						}
+					}
 				},
 				{
 					"match": "[&|]",
@@ -409,25 +409,6 @@
 				}
 			]
 		},
-		"type.infer": {
-			"patterns": [
-				{
-					"match": "\\b(infer)\\s+([a-zA-Z_][a-zA-Z0-9_]*)(?:\\s+(extends)\\b)?",
-					"name": "meta.type.infer.lua",
-					"captures": {
-						"1": {
-							"name": "keyword.operator.expression.infer.lua"
-						},
-						"2": {
-							"name": "entity.name.type.lua"
-						},
-						"3": {
-							"name": "keyword.operator.expression.extends.lua"
-						}
-					}
-				}
-			]
-		},
 		"type.arguments": {
 			"begin": "<",
 			"beginCaptures": {
@@ -442,13 +423,6 @@
 				}
 			},
 			"name": "meta.type.parameters.lua",
-			"patterns": [
-				{
-					"include": "#type.arguments.body"
-				}
-			]
-		},
-		"type.arguments.body": {
 			"patterns": [
 				{
 					"match": "\\b(extends|const)\\b",
@@ -852,7 +826,7 @@
 					]
 				},
 				{
-					"begin": "(?<=---)[ \\t]*@type",
+					"begin": "(?<=---)[ \\t]*@(type|overload)",
 					"beginCaptures": {
 						"0": {
 							"name": "storage.type.annotation.lua"
@@ -1055,71 +1029,7 @@
 					]
 				},
 				{
-					"begin": "(?<=---)[ \\t]*@vararg",
-					"beginCaptures": {
-						"0": {
-							"name": "storage.type.annotation.lua"
-						}
-					},
-					"end": "(?=[\\n@#])",
-					"patterns": [
-						{
-							"include": "#emmydoc.type"
-						}
-					]
-				},
-				{
-					"begin": "(?<=---)[ \\t]*@overload",
-					"beginCaptures": {
-						"0": {
-							"name": "storage.type.annotation.lua"
-						}
-					},
-					"end": "(?=[\\n@#])",
-					"patterns": [
-						{
-							"include": "#emmydoc.type"
-						}
-					]
-				},
-				{
-					"begin": "(?<=---)[ \\t]*@deprecated",
-					"beginCaptures": {
-						"0": {
-							"name": "storage.type.annotation.lua"
-						}
-					},
-					"end": "(?=[\\n@#])"
-				},
-				{
-					"begin": "(?<=---)[ \\t]*@meta",
-					"beginCaptures": {
-						"0": {
-							"name": "storage.type.annotation.lua"
-						}
-					},
-					"end": "(?=[\\n@#])"
-				},
-				{
-					"begin": "(?<=---)[ \\t]*@private",
-					"beginCaptures": {
-						"0": {
-							"name": "storage.type.annotation.lua"
-						}
-					},
-					"end": "(?=[\\n@#])"
-				},
-				{
-					"begin": "(?<=---)[ \\t]*@protected",
-					"beginCaptures": {
-						"0": {
-							"name": "storage.type.annotation.lua"
-						}
-					},
-					"end": "(?=[\\n@#])"
-				},
-				{
-					"begin": "(?<=---)[ \\t]*@package",
+					"begin": "(?<=---)[ \\t]*@(deprecated|meta|private|protected|package)",
 					"beginCaptures": {
 						"0": {
 							"name": "storage.type.annotation.lua"
@@ -1232,18 +1142,15 @@
 				}
 			]
 		},
-		"emmydoc.continuation": {
-			"match": "^[ \\t]*(---)(?!-)(?![ \\t]*@)",
-			"captures": {
-				"1": {
-					"name": "punctuation.definition.comment.lua"
-				}
-			}
-		},
 		"emmydoc.type": {
 			"patterns": [
 				{
-					"include": "#emmydoc.continuation"
+					"match": "^[ \\t]*(---)(?!-)(?![ \\t]*@)",
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.comment.lua"
+						}
+					}
 				},
 				{
 					"begin": "\\bfun\\b",
