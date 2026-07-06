@@ -95,6 +95,9 @@ export class Ctx implements vscode.Disposable {
 
         extCtx.subscriptions.push(this);
         extCtx.subscriptions.push(
+            vscode.commands.registerCommand('type', async (args: { text?: string }) => {
+                await this.typeText(args);
+            }),
             vscode.workspace.onDidChangeWorkspaceFolders(async () => {
                 await this.onWorkspaceFolderChanges();
             }),
@@ -223,6 +226,53 @@ export class Ctx implements vscode.Disposable {
     /** 记录需要跟随当前 client 一起释放的订阅. */
     pushClientCleanup(disposable: vscode.Disposable): void {
         this.clientSubscriptions.push(disposable);
+    }
+
+    /** 处理 VS Code 默认换行规则无法覆盖的 Lua 输入场景. */
+    private async typeText(args: { text?: string }): Promise<void> {
+        const text = args.text;
+        const editor = vscode.window.activeTextEditor;
+
+        // 只接管 Lua 单光标回车, 其它输入保持 VS Code 默认行为.
+        if (
+            text !== '\n' ||
+            !editor ||
+            editor.document.languageId !== LANGUAGE_ID ||
+            !this.config.typingContinueCommentsOnNewline ||
+            editor.selections.length !== 1 ||
+            !editor.selection.isEmpty
+        ) {
+            await vscode.commands.executeCommand('default:type', args);
+            return;
+        }
+
+        const position = editor.selection.active;
+        const line = editor.document.lineAt(position.line).text;
+        const beforeText = line.slice(0, position.character);
+        const afterText = line.slice(position.character);
+
+        // 只处理 `---@alias Name {|}` 场景, 避免影响普通表字面量或其它注解.
+        if (!/^\s*---@alias\s+\S+\s*\{\s*$/.test(beforeText) || !/^\s*\}\s*$/.test(afterText)) {
+            await vscode.commands.executeCommand('default:type', args);
+            return;
+        }
+
+        const indent = /^(\s*)/.exec(beforeText)?.[1] ?? '';
+        const tabSize = typeof editor.options.tabSize === 'number' ? editor.options.tabSize : 4;
+        const indentUnit = editor.options.insertSpaces ? ' '.repeat(tabSize) : '\t';
+        const insertion = `\n${indent}---${indentUnit}\n${indent}---`;
+
+        // 这里保留原有的 `}`, 只补齐 alias 多行注释前缀和编辑位置.
+        await editor.edit((edit) => {
+            edit.insert(position, insertion);
+        });
+
+        editor.selection = new vscode.Selection(
+            position.line + 1,
+            indent.length + 3 + indentUnit.length,
+            position.line + 1,
+            indent.length + 3 + indentUnit.length,
+        );
     }
 
     /** 根据当前配置解析语言服务器可执行信息. */

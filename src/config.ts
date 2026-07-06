@@ -122,8 +122,13 @@ export class Config implements vscode.Disposable {
                     action: { indentAction, appendText: '---| ' },
                 },
                 {
+                    // `---@alias Name` 后直接进入 alias 多行格式.
+                    beforeText: /^\s*---@alias\s+\S+\s*$/,
+                    action: { indentAction, appendText: '---| ' },
+                },
+                {
                     // 常见 EmmyLua 注解后继续给出注解前缀.
-                    beforeText: /^\s*---@(?:class|field|param|generic|overload|alias|type|return|enum|diagnostic|module|operator|async|cast|deprecated|private|protected|public|package)\b.*$/,
+                    beforeText: /^\s*---@(?:class|field|param|generic|overload|return|operator|async|deprecated|private|protected|public|package)\b.*$/,
                     action: { indentAction, appendText: '---@' },
                 },
                 {
