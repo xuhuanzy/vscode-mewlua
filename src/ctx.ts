@@ -3,7 +3,7 @@ import * as lc from 'vscode-languageclient/node';
 
 import { createServerLaunch, resolveServerInfo, type ServerInfo } from './bootstrap';
 import { createClient } from './client';
-import { ConfigurationManager, getPreferredConfigurationScope } from './config';
+import { Config, getPreferredConfigurationScope } from './config';
 import {
     EXTENSION_NAME,
     LANGUAGE_CLIENT_NAME,
@@ -64,6 +64,7 @@ export interface ServerStatus {
 export class Ctx implements vscode.Disposable {
     readonly languageId = LANGUAGE_ID;
     readonly version: string;
+    readonly config: Config;
     /** 语言服务器的状态栏 */
     readonly statusBar: vscode.StatusBarItem;
     /** 右侧的语言项显示 */
@@ -83,6 +84,7 @@ export class Ctx implements vscode.Disposable {
     ) {
         this._workspace = workspace;
         this.version = extCtx.extension.packageJSON.version ?? '<unknown>';
+        this.config = new Config(getPreferredConfigurationScope());
 
         this.statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 
@@ -97,8 +99,14 @@ export class Ctx implements vscode.Disposable {
                 await this.onWorkspaceFolderChanges();
             }),
             vscode.workspace.onDidChangeConfiguration(async (event) => {
-                const config = new ConfigurationManager(getPreferredConfigurationScope());
-                if (config.affectsLanguageServer(event) && this._client) {
+                const scope = getPreferredConfigurationScope();
+                if (!event.affectsConfiguration(Config.rootSection, scope)) {
+                    return;
+                }
+
+                this.config.refresh(scope);
+                this.config.configureLanguage();
+                if (this._client) {
                     await this.restart();
                 }
             }),
@@ -204,6 +212,7 @@ export class Ctx implements vscode.Disposable {
     dispose(): void {
         // VS Code 的 dispose 是同步入口, 这里异步关闭服务器并继续释放 UI 资源.
         void this.stopAndDispose();
+        this.config.dispose();
         this.statusBar.dispose();
         this.languageStatus.dispose();
         this._outputChannel?.dispose();
@@ -217,8 +226,8 @@ export class Ctx implements vscode.Disposable {
     }
 
     /** 根据当前配置解析语言服务器可执行信息. */
-    getServerInfo(config = new ConfigurationManager(getPreferredConfigurationScope())): ServerInfo {
-        return resolveServerInfo(this.extCtx, config, this._outputChannel);
+    getServerInfo(config?: Config): ServerInfo {
+        return resolveServerInfo(this.extCtx, config ?? this.config, this._outputChannel);
     }
 
     /** 响应工作区文件夹变化并按需要停止或重启服务器. */
@@ -253,9 +262,9 @@ export class Ctx implements vscode.Disposable {
             });
         }
 
-        const config = new ConfigurationManager(getPreferredConfigurationScope());
         // serverInfo 跟随本次启动配置刷新, 菜单和日志命令会读取这个结果.
-        const serverLaunch = createServerLaunch(this.extCtx, config, this._outputChannel);
+        this.config.refresh(getPreferredConfigurationScope());
+        const serverLaunch = createServerLaunch(this.extCtx, this.config, this._outputChannel);
         this._serverInfo = serverLaunch.serverInfo;
         this._client = createClient({
             serverOptions: serverLaunch.serverOptions,

@@ -1,7 +1,7 @@
 {
     "comments": {
         "lineComment": {
-            "comment": "--",
+            "comment": "--"
         },
         "blockComment": [
             "--[[",
@@ -28,20 +28,20 @@
     ],
     "autoClosingPairs": [
         {
-            "open": "[",
-            "close": "]"
-        },
-        {
-            "open": "(",
-            "close": ")"
-        },
-        {
             "open": "{",
             "close": "}",
             "notIn": [
                 "string",
                 "comment"
             ]
+        },
+        {
+            "open": "[",
+            "close": "]"
+        },
+        {
+            "open": "(",
+            "close": ")"
         },
         {
             "open": "'",
@@ -55,12 +55,37 @@
             "open": "\"",
             "close": "\"",
             "notIn": [
-                "string"
+                "string",
+                "comment"
             ]
         },
         {
             "open": "`",
-            "close": "`"
+            "close": "`",
+            "notIn": [
+                "string",
+                "comment"
+            ]
+        },
+        {
+            "open": "[=",
+            "close": "=]"
+        },
+        {
+            "open": "[==",
+            "close": "==]"
+        },
+        {
+            "open": "[===",
+            "close": "===]"
+        },
+        {
+            "open": "[====",
+            "close": "====]"
+        },
+        {
+            "open": "[=====",
+            "close": "=====]"
         }
     ],
     "surroundingPairs": [
@@ -95,11 +120,15 @@
     ],
     "folding": {
         "markers": {
-            "start": "^\\s*--region\\b",
-            "end": "^\\s*--endregion\\b"
+            "start": "^[ \\t]*(?:#region\\b|--[ \\t]*#?region\\b)",
+            "end": "^[ \\t]*(?:#endregion\\b|--[ \\t]*#?endregion\\b)"
         }
     },
+    "wordPattern": "((?<=')[^']+(?='))|((?<=\")[^\"]+(?=\"))|(-?\\d*\\.\\d\\w*)|([^\\`\\~\\!\\@\\$\\^\\&\\*\\(\\)\\=\\+\\[\\{\\]\\}\\\\\\|\\;\\:\\'\\\"\\,\\.\\<\\>\\/\\-\\s]+)",
     "indentationRules": {
-        "increaseIndentPattern": "\\b(do|else|then|repeat|function)\\b((?!end).)*$"
+        "increaseIndentPattern": "^\\s*(?:(?:local\\s+)?function(?:\\s+[\\w.:]+)?\\s*\\(.*\\)|(?!--).+\\s*=\\s*function\\s*\\(.*\\)|if\\b.*\\bthen|elseif\\b.*\\bthen|else|for\\b.*\\bdo|while\\b.*\\bdo|repeat|do)\\s*(?:--.*)?$",
+        "decreaseIndentPattern": "^\\s*(?:elseif\\b.*\\bthen|else\\b|end\\b|until\\b)",
+        "indentNextLinePattern": "^\\s*(?:(?:local\\s+)?function(?:\\s+[\\w.:]+)?\\s*\\(.*\\)|(?!--).+\\s*=\\s*function\\s*\\(.*\\)|if\\b.*\\bthen|elseif\\b.*\\bthen|else|for\\b.*\\bdo|while\\b.*\\bdo|repeat|do)\\s*(?:--.*)?$",
+        "unIndentedLinePattern": "^\\s*--"
     }
 }

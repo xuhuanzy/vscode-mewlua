@@ -9,5 +9,6 @@
   "jsonValidation.emmyrc.url": "./schemas/emmyrc.schema.json",
   "configuration.ls.executablePath.markdownDescription": "Path to the MewLua language server executable. Leave empty to use the bundled executable.",
   "configuration.ls.startParameters.markdownDescription": "Startup arguments passed to the MewLua language server process.",
-  "configuration.ls.globalConfigPath.markdownDescription": "Optional global EmmyLua configuration path passed through `EMMYLUALS_CONFIG`."
+  "configuration.ls.globalConfigPath.markdownDescription": "Optional global EmmyLua configuration path passed through `EMMYLUALS_CONFIG`.",
+  "configuration.typing.continueCommentsOnNewline.markdownDescription": "Continue Lua comment prefixes automatically when pressing Enter in line comments and EmmyLua annotations."
 }

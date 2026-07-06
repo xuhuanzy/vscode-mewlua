@@ -98,6 +98,11 @@
           "type": "string",
           "default": "",
           "markdownDescription": "%configuration.ls.globalConfigPath.markdownDescription%"
+        },
+        "mewlua.typing.continueCommentsOnNewline": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%configuration.typing.continueCommentsOnNewline.markdownDescription%"
         }
       }
     },

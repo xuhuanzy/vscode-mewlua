@@ -7,7 +7,7 @@ import * as path from 'node:path';
 import * as vscode from 'vscode';
 import * as lc from 'vscode-languageclient/node';
 
-import { ConfigurationManager } from './config';
+import { Config } from './config';
 
 const { t } = vscode.l10n;
 
@@ -31,7 +31,7 @@ export interface ServerLaunch {
 
 export function createServerLaunch(
     context: vscode.ExtensionContext,
-    config: ConfigurationManager,
+    config: Config,
     outputChannel: vscode.LogOutputChannel,
 ): ServerLaunch {
     const serverInfo = resolveServerInfo(context, config, outputChannel);
@@ -76,7 +76,7 @@ export function createServerLaunch(
 
 export function resolveServerInfo(
     context: vscode.ExtensionContext,
-    config: ConfigurationManager,
+    config: Config,
     outputChannel?: vscode.LogOutputChannel,
 ): ServerInfo {
     const debugServerPortValue = process.env['__MEWLUA_LS_DEBUG_PORT']?.trim();
