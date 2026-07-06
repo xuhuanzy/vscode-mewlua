@@ -8,11 +8,14 @@
     "type": "git",
     "url": "https://github.com/xuhuanzy/vscode-mewlua"
   },
+  "icon": "icon.png",
+  "license": "MIT",
   "l10n": "./l10n",
   "engines": {
     "vscode": "^1.107.0"
   },
   "categories": [
+    "Formatters",
     "Programming Languages"
   ],
   "activationEvents": [

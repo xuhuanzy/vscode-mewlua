@@ -2,8 +2,6 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { load } from 'js-yaml';
-
 interface EmmyrcSchemaConfig {
     schema: {
         upstreamUrl: string;
@@ -12,16 +10,21 @@ interface EmmyrcSchemaConfig {
 }
 
 export async function syncEmmyrcSchema(projectRoot = process.cwd()): Promise<void> {
-    const configPath = path.join(projectRoot, 'scripts', 'release', 'release.yaml');
-    const rawConfig: unknown = load(fs.readFileSync(configPath, 'utf8'));
+    const configPath = path.join(projectRoot, 'scripts', 'release', 'release.json');
+    let rawConfig: unknown;
+    try {
+        rawConfig = JSON.parse(fs.readFileSync(configPath, 'utf8')) as unknown;
+    } catch (error: unknown) {
+        throw new Error(`${path.relative(projectRoot, configPath)} 不是有效 JSON: ${error instanceof Error ? error.message : String(error)}`);
+    }
 
     if (typeof rawConfig !== 'object' || rawConfig === null || Array.isArray(rawConfig)) {
-        throw new Error(`${path.relative(projectRoot, configPath)} 必须是 YAML 映射.`);
+        throw new Error(`${path.relative(projectRoot, configPath)} 必须是 JSON 对象.`);
     }
 
     const rawSchemaConfig = (rawConfig as Record<string, unknown>)['schema'];
     if (typeof rawSchemaConfig !== 'object' || rawSchemaConfig === null || Array.isArray(rawSchemaConfig)) {
-        throw new Error(`${path.relative(projectRoot, configPath)} 必须定义 schema 映射.`);
+        throw new Error(`${path.relative(projectRoot, configPath)} 必须定义 schema 对象.`);
     }
 
     const config: EmmyrcSchemaConfig = {
