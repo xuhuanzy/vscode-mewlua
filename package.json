@@ -127,20 +127,15 @@
   "scripts": {
     "vscode:prepublish": "pnpm run package",
     "vsce:package": "pnpm vsce package --no-dependencies",
-    "vsce:publish": "pnpm vsce publish --no-dependencies",
-    "compile": "pnpm run check-types && pnpm run lint && node esbuild.js",
-    "watch": "npm-run-all -p watch:*",
+    "compile": "pnpm run check && node esbuild.js",
+    "watch": "npm-run-all -p watch:tsc watch:esbuild",
     "watch:esbuild": "node esbuild.js --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-    "package": "pnpm run i18n:schema && pnpm run check-types && pnpm run lint && node esbuild.js --production",
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
-    "test:syntax": "node --test syntaxes/test/*.test.mjs",
-    "check-types": "tsc --noEmit",
-    "i18n:schema": "tsc -p scripts/tsconfig.json && node out/scripts/i18n/schema-i18n.js",
-    "release": "tsc -p scripts/tsconfig.json && node out/scripts/release/index.js",
-    "lint": "eslint src"
+    "package": "pnpm run compile --production",
+    "test": "pnpm run check",
+    "check": "tsc --noEmit && eslint src",
+    "i18n": "tsc -p scripts/tsconfig.json && node out/scripts/i18n/schema-i18n.js",
+    "release": "tsc -p scripts/tsconfig.json && node out/scripts/release/index.js"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
