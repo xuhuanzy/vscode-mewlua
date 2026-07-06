@@ -20,6 +20,7 @@ Mew Lua 是一个面向 VS Code 的 Lua 语言客户端扩展。
 | `mewlua.ls.executablePath` | 语言服务器可执行文件路径。留空时使用扩展内置的可执行文件。 |
 | `mewlua.ls.startParameters` | 传递给语言服务器进程的启动参数。 |
 | `mewlua.ls.globalConfigPath` | 可选的全局 EmmyLua 配置文件路径。 |
+| `mewlua.typing.continueCommentsOnNewline` | 在 Lua 行注释和 EmmyLua 注解中按 Enter 时自动延续注释前缀。 |
 
 
 ## License
