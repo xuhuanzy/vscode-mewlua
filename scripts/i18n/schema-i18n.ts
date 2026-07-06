@@ -39,15 +39,15 @@ class SchemaI18nSync {
 
             const normalizedLanguage = language.toLowerCase();
             if (normalizedLanguage === 'en') {
-                throw new Error('en is the source language and cannot be requested as a translation language.');
+                throw new Error('en 是源语言, 不能作为目标翻译语言.');
             }
 
             if (!/^[A-Za-z][A-Za-z0-9-]*$/.test(language)) {
-                throw new Error(`Invalid language tag: ${language}`);
+                throw new Error(`无效的语言标签: ${language}`);
             }
 
             if (normalizedLanguages.has(normalizedLanguage)) {
-                throw new Error(`Duplicate language tag: ${language}`);
+                throw new Error(`重复的语言标签: ${language}`);
             }
 
             normalizedLanguages.add(normalizedLanguage);
@@ -55,7 +55,7 @@ class SchemaI18nSync {
         }
 
         if (this.languages.length === 0) {
-            throw new Error('Schema i18n sync requires at least one target language.');
+            throw new Error('Schema i18n 同步至少需要一个目标语言.');
         }
 
         this.languageSet = new Set(this.languages);
@@ -67,7 +67,7 @@ class SchemaI18nSync {
     run(): void {
         const parsedSchema: unknown = JSON.parse(fs.readFileSync(this.schemaPath, 'utf8'));
         if (!this.isJsonObject(parsedSchema)) {
-            throw new Error(`${this.schemaPath} must contain a JSON object.`);
+            throw new Error(`${this.schemaPath} 必须是 JSON 对象.`);
         }
 
         const schema = parsedSchema;
@@ -85,12 +85,12 @@ class SchemaI18nSync {
             fs.writeFileSync(translatedSchemaPath, `${JSON.stringify(translatedSchema, null, 2)}\n`, 'utf8');
         }
 
-        console.log(`Synced ${syncedTranslations.size} schema descriptions.`);
+        console.log(`已同步 ${syncedTranslations.size} 条 schema 描述.`);
         console.log(
-            `Translations: ${stats.preserved} preserved, ${stats.added} added, ${stats.cleared} cleared, ${stats.removed} removed.`,
+            `翻译状态: 保留 ${stats.preserved} 条, 新增 ${stats.added} 条, 清空 ${stats.cleared} 条, 移除 ${stats.removed} 条.`,
         );
-        console.log(`Updated ${path.relative(this.projectRoot, this.translationYamlPath)}.`);
-        console.log(`Generated localized schemas for ${this.languages.join(', ')}.`);
+        console.log(`已更新 ${path.relative(this.projectRoot, this.translationYamlPath)}.`);
+        console.log(`已生成 ${this.languages.join(', ')} 本地化 schema.`);
     }
 
     /** 判断外部数据是否是可继续按对象字段读取的 JSON object. */
@@ -118,7 +118,7 @@ class SchemaI18nSync {
                 if (readableKey && this.shouldTranslateKey(readableKey)) {
                     const existingDescription = descriptions.get(readableKey);
                     if (existingDescription !== undefined && existingDescription !== child) {
-                        throw new Error(`Duplicate i18n key with different English text: ${readableKey}`);
+                        throw new Error(`i18n key 重复且英文原文不同: ${readableKey}`);
                     }
 
                     descriptions.set(readableKey, child);
@@ -168,25 +168,25 @@ class SchemaI18nSync {
         }
 
         if (!this.isJsonObject(parsed)) {
-            throw new Error(`${this.translationYamlPath} must contain a YAML mapping.`);
+            throw new Error(`${this.translationYamlPath} 必须是 YAML 映射.`);
         }
 
         // 只读取当前传入的语言字段, 避免拼错语言名后被同步进产物.
         for (const [key, value] of Object.entries(parsed)) {
             if (!this.isJsonObject(value)) {
-                throw new Error(`${this.translationYamlPath}: translation entry ${key} must be a mapping.`);
+                throw new Error(`${this.translationYamlPath}: 翻译条目 ${key} 必须是映射.`);
             }
 
             const en = value['en'];
             if (en !== undefined && typeof en !== 'string') {
-                throw new Error(`${this.translationYamlPath}: ${key}.en must be a string.`);
+                throw new Error(`${this.translationYamlPath}: ${key}.en 必须是字符串.`);
             }
 
             const translationValues: Record<string, string> = {};
             for (const language of this.languages) {
                 const translationValue = value[language];
                 if (translationValue !== undefined && typeof translationValue !== 'string') {
-                    throw new Error(`${this.translationYamlPath}: ${key}.${language} must be a string.`);
+                    throw new Error(`${this.translationYamlPath}: ${key}.${language} 必须是字符串.`);
                 }
 
                 translationValues[language] = translationValue ?? '';
@@ -376,4 +376,9 @@ class SchemaI18nSync {
     }
 }
 
-new SchemaI18nSync(process.cwd(), ['zh-CN']).run();
+try {
+    new SchemaI18nSync(process.cwd(), ['zh-CN']).run();
+} catch (error) {
+    console.error(`Schema i18n 同步失败: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+}

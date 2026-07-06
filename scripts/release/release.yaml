@@ -1,0 +1,3 @@
+schema:
+  upstreamUrl: https://raw.githubusercontent.com/EmmyLuaLs/emmylua-analyzer-rust/main/crates/emmylua_code_analysis/resources/schema.json
+  outputPath: schemas/emmyrc.schema.json

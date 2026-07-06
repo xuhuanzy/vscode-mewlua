@@ -138,9 +138,9 @@
     "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
     "test:syntax": "node --test syntaxes/test/*.test.mjs",
     "check-types": "tsc --noEmit",
-    "i18n:schema": "tsc -p scripts/i18n/tsconfig.json && node out/scripts/i18n/schema-i18n.js",
-    "lint": "eslint src",
-    "test": "vscode-test"
+    "i18n:schema": "tsc -p scripts/tsconfig.json && node out/scripts/i18n/schema-i18n.js",
+    "release": "tsc -p scripts/tsconfig.json && node out/scripts/release/index.js",
+    "lint": "eslint src"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",

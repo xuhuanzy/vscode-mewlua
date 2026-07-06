@@ -9,9 +9,10 @@
       "node"
     ],
     "strict": true,
-    "outDir": "../../out/scripts/i18n"
+    "rootDir": ".",
+    "outDir": "../out/scripts"
   },
   "include": [
-    "*.ts"
+    "**/*.ts"
   ]
 }
