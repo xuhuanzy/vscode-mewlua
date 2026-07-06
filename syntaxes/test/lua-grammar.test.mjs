@@ -127,3 +127,17 @@ test('inlined type helper patterns keep their scopes', async () => {
 	assert.ok(findToken(lines, 2, 'infer').scopes.includes('keyword.operator.expression.infer.lua'));
 	assert.ok(findToken(lines, 2, 'T').scopes.includes('entity.name.type.lua'));
 });
+
+test('object type keys in aliases are parsed as properties', async () => {
+	const lines = await tokenizeLua('---@alias User1 { name: string, age?: integer }');
+
+	const name = findToken(lines, 1, 'name');
+	assert.ok(name.scopes.includes('variable.object.property.lua'));
+	assert.ok(!name.scopes.includes('entity.name.type.lua'));
+
+	const age = findToken(lines, 1, 'age');
+	assert.ok(age.scopes.includes('variable.object.property.lua'));
+	assert.ok(!age.scopes.includes('entity.name.type.lua'));
+
+	assert.ok(findToken(lines, 1, 'integer').scopes.includes('support.type.primitive.lua'));
+});

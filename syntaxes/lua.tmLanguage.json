@@ -311,6 +311,27 @@
 					"include": "#type.mapped.declaration"
 				},
 				{
+					"begin": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b(\\??)\\s*(:)",
+					"beginCaptures": {
+						"1": {
+							"name": "variable.object.property.lua"
+						},
+						"2": {
+							"name": "keyword.operator.lua"
+						},
+						"3": {
+							"name": "keyword.operator.lua"
+						}
+					},
+					"end": "(?=,|\\})",
+					"name": "meta.field.declaration.lua",
+					"patterns": [
+						{
+							"include": "#emmydoc.type"
+						}
+					]
+				},
+				{
 					"include": "#emmydoc.type"
 				}
 			]
