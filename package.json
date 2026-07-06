@@ -3,6 +3,7 @@
   "displayName": "Mew Lua",
   "description": "%extension.description%",
   "version": "0.0.1",
+  "publisher": "xuhuanzy",
   "repository": {
     "type": "git",
     "url": "https://github.com/xuhuanzy/vscode-mewlua"
