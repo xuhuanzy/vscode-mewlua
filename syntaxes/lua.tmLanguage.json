@@ -54,20 +54,7 @@
 			]
 		},
 		{
-			"match": "(?<![\\w.])0[xX](?:(?:[0-9A-Fa-f]+\\.[0-9A-Fa-f]*|[0-9A-Fa-f]*\\.[0-9A-Fa-f]+)(?:[pP][+-]?\\d+)?|[0-9A-Fa-f]+[pP][+-]?\\d+)(?![\\w.])",
-			"name": "constant.numeric.float.hexadecimal.lua"
-		},
-		{
-			"match": "(?<![\\w.])0[xX][0-9A-Fa-f]+(?![\\w.])",
-			"name": "constant.numeric.integer.hexadecimal.lua"
-		},
-		{
-			"match": "(?<![\\w.])(?:(?:\\d+\\.\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?|\\d+[eE][+-]?\\d+)(?![\\w.])",
-			"name": "constant.numeric.float.lua"
-		},
-		{
-			"match": "(?<![\\w.])\\d+(?![\\w.])",
-			"name": "constant.numeric.integer.lua"
+			"include": "#numeric-literal"
 		},
 		{
 			"include": "#string"
@@ -204,6 +191,26 @@
 		}
 	],
 	"repository": {
+		"numeric-literal": {
+			"patterns": [
+				{
+					"match": "(?<![\\w.])0[xX](?:(?:[0-9A-Fa-f]+\\.[0-9A-Fa-f]*|[0-9A-Fa-f]*\\.[0-9A-Fa-f]+)(?:[pP][+-]?\\d+)?|[0-9A-Fa-f]+[pP][+-]?\\d+)(?![\\w.])",
+					"name": "constant.numeric.float.hexadecimal.lua"
+				},
+				{
+					"match": "(?<![\\w.])0[xX][0-9A-Fa-f]+(?![\\w.])",
+					"name": "constant.numeric.integer.hexadecimal.lua"
+				},
+				{
+					"match": "(?<![\\w.])(?:(?:\\d+\\.\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?|\\d+[eE][+-]?\\d+)(?![\\w.])",
+					"name": "constant.numeric.float.lua"
+				},
+				{
+					"match": "(?<![\\w.])\\d+(?![\\w.])",
+					"name": "constant.numeric.integer.lua"
+				}
+			]
+		},
 		"hover.class": {
 			"patterns": [
 				{
@@ -1222,6 +1229,9 @@
 				},
 				{
 					"include": "#type.arguments"
+				},
+				{
+					"include": "#numeric-literal"
 				},
 				{
 					"match": "\\basync\\b",

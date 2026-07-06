@@ -103,6 +103,25 @@ test('numeric literal patterns keep their scopes after grouping', async () => {
 	assert.ok(findToken(lines, 1, '42').scopes.includes('constant.numeric.integer.lua'));
 });
 
+test('class field numeric initializers keep numeric scopes', async () => {
+	const lines = await tokenizeLua(`(class) A {
+    one: integer = "123",
+    two: integer = 234,
+}`);
+
+	const value = findToken(lines, 3, '234');
+	assert.ok(value.scopes.includes('meta.field.declaration.lua'));
+	assert.ok(value.scopes.includes('constant.numeric.integer.lua'));
+});
+
+test('numeric literal types keep numeric scopes', async () => {
+	const lines = await tokenizeLua('local function test(v: 1)');
+
+	const value = findToken(lines, 1, '1');
+	assert.ok(value.scopes.includes('meta.parameter.lua'));
+	assert.ok(value.scopes.includes('constant.numeric.integer.lua'));
+});
+
 test('grouped emmydoc tags keep annotation and type scopes', async () => {
 	const lines = await tokenizeLua(`---@type number
 ---@overload fun(): string
