@@ -161,6 +161,23 @@ test('inlined type helper patterns keep their scopes', async () => {
 	assert.ok(findToken(lines, 2, 'T').scopes.includes('entity.name.type.lua'));
 });
 
+test('fun types nested in type arguments end at the closing bracket', async () => {
+	const lines = await tokenizeLua(`---@type table<integer, fun(result: any)>
+local requestMap = {}
+---@field cb fun(self: any)?`);
+
+	const localKeyword = findToken(lines, 2, 'local');
+	assert.ok(localKeyword.scopes.includes('keyword.local.lua'), 'local should stay a keyword.');
+	assert.ok(!localKeyword.scopes.includes('meta.type.parameters.lua'), 'local should not stay inside type arguments.');
+	assert.ok(!localKeyword.scopes.includes('meta.documentation.annotation.lua'), 'local should not stay inside the annotation.');
+
+	const name = findToken(lines, 2, 'requestMap');
+	assert.ok(name.scopes.includes('variable.other.lua'), 'requestMap should be a plain variable.');
+	assert.ok(!name.scopes.includes('entity.name.type.lua'), 'requestMap should not be a type name.');
+
+	assert.ok(findToken(lines, 1, 'any').scopes.includes('support.type.primitive.lua'));
+});
+
 test('object type keys in aliases are parsed as properties', async () => {
 	const lines = await tokenizeLua('---@alias User1 { name: string, age?: integer }');
 
